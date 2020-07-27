@@ -45,7 +45,7 @@ void preorden(arbol *recorrer);
 void inorden(arbol *recorrer);
 void postorden(arbol *recorrer);
 void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *padre);
-void agregarDatos();
+void agregarDatos(int numero);
 int exiteenArbol(arbol *recorrer, int buscado);
 void verArbol(arbol recorrer, int n);
 void graficarArbol(arbol, int, int);
@@ -68,12 +68,14 @@ parbol nuevoNodo();
 
 
 //Variable "nuevo" almacenar� una nueva hoja para el �rbol.
-parbol nuevoNodo(){	
+parbol nuevoNodo(int numero){	
 	nuevo = new (arbol); //Crea la reserva de espacio en memoria.
 
 	///Vamos a llama a n que devolvare allegro
 
-	cout<<"Ingresar nuevo Dato: "; cin>>nuevo->dato;
+	//cout<<"Ingresar nuevo Dato: "; cin>>nuevo->dato;
+
+	nuevo->dato = numero;
 		
 	nuevo->izq=NULL; //Punteros a tierra
 	nuevo->dere=NULL; //Punteros a tierra
@@ -81,6 +83,7 @@ parbol nuevoNodo(){
 	nuevo->alturaDere=0; //Setea en cero la altura derecha el nodo
 	nuevo->fe= nuevo->alturaDere-nuevo->alturaIzq; //Calculo del factor equilibrio, podr�a asignarse el valor cero desde la entrada.
 	
+	//retorna el nodo
 	return nuevo;
 }
 
@@ -97,6 +100,7 @@ void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *PadreAB){
 		raiz=nuevo; //Asignar a la ra�z el valor del nuevo nodo creado...
 		raiz->padre=NULL;
 	}else{
+		//Ver si solo es Menor 
 		if(nuevo->dato <= recorrer->dato){
 			if(recorrer->izq!=NULL){
 				PadreAB=recorrer->izq;
@@ -154,7 +158,8 @@ void postorden(arbol *recorrer){
   	if (recorrer != NULL) {
     	postorden(recorrer->izq);
     	postorden(recorrer->dere);
-    	cout<<"\nNUMERO: "<<recorrer->dato<<endl;
+		//Identifica el numero y lo borra
+    	//cout<<"\nNUMERO: "<<recorrer->dato<<endl;
   	}
 }
 
@@ -182,7 +187,7 @@ espacios en "X" para simular la altura o profundidad del nodo en el arbol.
 En cada impresi�n de nodo salta una l�nea hac�a abajo.
 De esta forma los nodos nunca se rozan y siempre se mantienen ordenados seg�n la forma del �rbol.
 */
-void verArbol(arbol *recorrer, int n){
+void verArbol(arbol *recorrer, int n){ 
      if(recorrer==NULL)
           return;
      verArbol(recorrer->dere, n+1);
@@ -247,7 +252,8 @@ int exiteenArbol(arbol *recorrer, int buscado){
 		if(buscado<recorrer->dato){
 			exiteenArbol(recorrer->izq, buscado);
 		}else if (buscado>recorrer->dato){
-			exiteenArbol(recorrer->dere, buscado);
+			exiteenArbol(recorrer->dere, buscado); 
+			
 		}else{
 			return 0;
 		}
@@ -674,20 +680,27 @@ void dibujarCuadro(int x1,int y1,int x2,int y2){
 /*
 Pregunta cu�ntos datos se ingresar�n y en base a la cantidad ir� solicitando los datos en forma cont�nua.
 */
-void agregarDatos(){
-	system("cls");
-	int x;
-	cout<<"Cuantos datos desea insertar? ";cin>>x;
-	for (int i=1; i<=x;i++){
-		cout<<"\nIngrese registro "<<i<<endl;
-		recorrer=raiz; //Se apunta a recorrer en al mismo nodo donde apunta la ra�z
-		nuevo=nuevoNodo(); //Almacena el nuevo nodo para luego insertarlo en el arbol.
+void agregarDatos(int numero){
+
+///Recibiremos Dato a Ingresar
+
+	//system("cls");
+	//int x;
+	//cout<<"Cuantos datos desea insertar? ";cin>>x;
+	//for (int i=1; i<=x;i++){
+		//cout<<"\nIngrese registro "<<i<<endl;
 		
+		recorrer=raiz; //Se apunta a recorrer en al mismo nodo donde apunta la ra�z
+		nuevo=nuevoNodo(numero); //Almacena el nuevo nodo para luego insertarlo en el arbol.
+		
+		// Aceptan numeros mayores a Cero
 		if (nuevo->dato!=0){
 			if (exiteenArbol(recorrer, nuevo->dato)==1){ //Evalua si el nodo ya existe en el arbol.
 				PadreAB=raiz;
 				insertarNuevo(recorrer, nuevo, PadreAB);
-					
+				//Agrega Raiz en caso de que no exista !
+				//Automaticamente hace el ordenamiento
+
 				//BBaltura(recorrer);
 				//BBnecesidadEquilibrar(recorrer);
 			}else{
@@ -696,16 +709,17 @@ void agregarDatos(){
 			}
 		}else{
 			vaciarArbol(raiz);
-			system("cls");
-			verArbol(raiz, 0);
-			cout<<"El arbol ha sido eliminado porque ingreso el numero cero "<<endl;
-			getch();
-			i=x;
+			//system("cls");
+			//verArbol(raiz, 0);
+			//cout<<"El arbol ha sido eliminado porque ingreso el numero cero "<<endl;
+			//getch();
+			//i=x;
 			return;
 		}
 		
-		verArbol(raiz,0);
-	}
+		//Muestra nuestro Arbol
+		//verArbol(raiz,0);
+	//}
 }
 
 
@@ -736,7 +750,7 @@ void intro(){
     return;
 }
 
-int main(){
+/* int main(){
 	intro();
 	cprintf("Proyecto de arbol AVL --- UMG-Chinautla");
     gotoxy(3,7);cprintf("Curso de Estructura de Datos");
@@ -746,6 +760,8 @@ int main(){
     getch();
     clrscr();
     
+    
+    int ene;
 	int opcion;
 	while (opcion!=11){
 		system("cls");
@@ -768,7 +784,8 @@ int main(){
 		
 		switch(opcion){
 			case 1:
-				agregarDatos();
+				agregarDatos(ene=3);
+				getch();
 				break;
 			case 2:
 				cout<<"____________PREORDEN__________"<<endl;
@@ -838,3 +855,4 @@ int main(){
     
 	return 0;
 }
+ */
