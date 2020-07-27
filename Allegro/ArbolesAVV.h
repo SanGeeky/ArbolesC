@@ -55,6 +55,7 @@ void estadoFactorEquilibrio(arbol *recorrer);
 void necesidadEquilibrar(arbol *recorrer);
 
 void vaciarArbol(arbol *recorrer);
+arbol retornarArbol();
 
 //funciones que reestructuran el �rbol
 void rotarII();
@@ -65,6 +66,10 @@ void rotarDI();
 parbol nuevoNodo();
 
 
+arbol retornarArbol()
+{
+	return *raiz;
+}
 
 
 //Variable "nuevo" almacenar� una nueva hoja para el �rbol.
@@ -686,7 +691,7 @@ void agregarDatos(int numero){
 
 	//system("cls");
 	//int x;
-	//cout<<"Cuantos int datdatos desea insertar? ";cin>>x;
+	//cout<<"Cuantos datos desea insertar? ";cin>>x;
 	//for (int i=1; i<=x;i++){
 		//cout<<"\nIngrese registro "<<i<<endl;
 		
@@ -716,7 +721,7 @@ void agregarDatos(int numero){
 			//i=x;
 			return;
 		}
-		
+		cout<<nuevo->dato<<endl;
 		//Muestra nuestro Arbol
 		//verArbol(raiz,0);
 	//}

@@ -1,6 +1,8 @@
 #include <allegro.h>
 #include <iostream>
 
+#include "ArbolesAVV.h"
+
 void init();
 void deinit();
 char *numero = new char[5]; 
@@ -309,6 +311,39 @@ void imprimirimagen(){
 	}
 }
 
+void graficarArbolAllegro(arbol *recorrer, int x, int y){
+	
+	if(recorrer==NULL)
+        return;
+        
+    graficarArbolAllegro(recorrer->dere, x+50, y+60);
+    
+    //gotoxy(x,y); cprintf("%d", recorrer->dato);	
+	textprintf(screen,font,x,y,150,"%d",(recorrer->dato));
+
+    //xdis=x;
+    
+	
+	/* for ( int i = 0; i < 3; i++)
+	{
+		
+		if(numero[i]=='0')draw_sprite(screen,cero,xdis,y);
+		if(numero[i]=='1')draw_sprite(screen,uno,xdis,y);
+		if(numero[i]=='2')draw_sprite(screen,dos,xdis,y);
+		if(numero[i]=='3')draw_sprite(screen,tres,xdis,y);
+		if(numero[i]=='4')draw_sprite(screen,cuatro,xdis,y);
+		if(numero[i]=='5')draw_sprite(screen,cinco,xdis,y);
+		if(numero[i]=='6')draw_sprite(screen,seis,xdis,y);
+		if(numero[i]=='7')draw_sprite(screen,siete,xdis,y);
+		if(numero[i]=='8')draw_sprite(screen,ocho,xdis,y);
+		if(numero[i]=='9')draw_sprite(screen,nueve,xdis,y);
+		xdis+=35;
+		
+	} */
+	
+    graficarArbolAllegro(recorrer->izq, x-50, y+60);
+    x=540; y=0;
+}
 
 
 int main() {
@@ -341,19 +376,24 @@ int main() {
 	
 	
 	while(!key[KEY_ESC]){
-		y+=70;
+		//y+=70;
 		//x+=70;
 		y2=y;
 		x2=x;
 		inc=40;
+
 		ingresarnumero();
-		imprimirimagen();
+		//imprimirimagen();
 		int n = retornarEntero();
+		//Aqui agrega el nuevo nodo al arbol
+      	agregarDatos(n);
+		recorrer=raiz;
+		graficarArbolAllegro(recorrer,x,y);
 		if(n<=50){
-			x-=70;
+			//x-=70;
 			line(screen, x2, y2+50, x2-(inc*1.1), y2+80, 32);
 		}else{
-			x+=70;
+			//x+=70;
 			line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
 		}
 		
