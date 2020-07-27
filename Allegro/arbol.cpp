@@ -121,7 +121,7 @@ int main() {
 		int n = retornarEntero();
 		if(n<=50){
 			x-=70;
-			line(screen, x2-80, y2+50, x2+(80-inc), y2+80, 32);
+			line(screen, x2-80, y2+50, x2-(80-inc), y2+80, 32);
 		}else{
 			x+=70;
 			line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
