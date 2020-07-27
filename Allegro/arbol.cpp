@@ -4,6 +4,23 @@
 void init();
 void deinit();
 char *numero = new char[5]; 
+BITMAP *cero;
+BITMAP *uno;
+BITMAP *dos;
+BITMAP *tres;
+BITMAP *cuatro;
+BITMAP *cinco;
+BITMAP *seis;
+BITMAP *siete;
+BITMAP *ocho;
+BITMAP *nueve;
+int xm=0;
+int x=540;
+int y=0;
+int x2=0;
+int y2=0;
+int inc=0;
+int xdis=0;
 
 
 int retornarEntero() //castea el char de caracteres
@@ -29,6 +46,45 @@ int retornarEntero() //castea el char de caracteres
 	return n;
 }
 
+void ingresarnumero(){
+	//delete[] numero;
+
+	for(int i = 0; i < 3; i++ )
+		numero[i]=NULL;
+	
+	int f=0;
+	while(!key[KEY_ENTER] || f<3){
+		char ascii=readkey();
+		if(key[KEY_ENTER]) break;
+		textprintf(screen,font,xm,10,150,"%c",(ascii));
+		xm+=8;
+		numero[f]=ascii;
+		f++;
+	}
+	
+}
+
+void imprimirimagen(){
+	xdis=x;
+	
+	for ( int i = 0; i < 3; i++)
+	{
+		
+		if(numero[i]=='0')draw_sprite(screen,cero,xdis,y);
+		if(numero[i]=='1')draw_sprite(screen,uno,xdis,y);
+		if(numero[i]=='2')draw_sprite(screen,dos,xdis,y);
+		if(numero[i]=='3')draw_sprite(screen,tres,xdis,y);
+		if(numero[i]=='4')draw_sprite(screen,cuatro,xdis,y);
+		if(numero[i]=='5')draw_sprite(screen,cinco,xdis,y);
+		if(numero[i]=='6')draw_sprite(screen,seis,xdis,y);
+		if(numero[i]=='7')draw_sprite(screen,siete,xdis,y);
+		if(numero[i]=='8')draw_sprite(screen,ocho,xdis,y);
+		if(numero[i]=='9')draw_sprite(screen,nueve,xdis,y);
+		xdis+=35;
+		
+	}
+}
+
 
 
 int main() {
@@ -36,16 +92,7 @@ int main() {
 	BITMAP *buffer;
 	buffer = create_bitmap(1080, 720);
 	clear_to_color(buffer, 0xFFFFFF);
-	BITMAP *cero;
-	BITMAP *uno;
-	BITMAP *dos;
-	BITMAP *tres;
-	BITMAP *cuatro;
-	BITMAP *cinco;
-	BITMAP *seis;
-	BITMAP *siete;
-	BITMAP *ocho;
-	BITMAP *nueve;
+	
 
 	cero = load_bmp("numeros/0.bmp",NULL);
 	uno = load_bmp("numeros/1.bmp",NULL);
@@ -61,46 +108,28 @@ int main() {
 	//line(screen, 0, 0, 500, 500, 32);
 	//ascii=readkey();
 	
-	int x = 1;		
-	int f=0;
-	while(!key[KEY_ENTER] || f<3){
-		char ascii=readkey();
-		if(key[KEY_ENTER]) break;
-		textprintf(screen,font,x,10,150,"%c",(ascii));
-		x+=8;
-		numero[f]=ascii;
-		f++;
-		/* if(key[KEY_0]){	
-			draw_sprite(screen,cero,500,0);
-		} */
-	}
-
-	int n = retornarEntero();
-	x=0;
-	for ( int i = 0; i < 3; i++)
-	{
-		if(numero[i]=='0')draw_sprite(screen,cero,x,100);
-		if(numero[i]=='1')draw_sprite(screen,uno,x,100);
-		if(numero[i]=='2')draw_sprite(screen,dos,x,100);
-		if(numero[i]=='3')draw_sprite(screen,tres,x,100);
-		if(numero[i]=='4')draw_sprite(screen,cuatro,x,100);
-		if(numero[i]=='5')draw_sprite(screen,cinco,x,100);
-		if(numero[i]=='6')draw_sprite(screen,seis,x,100);
-		if(numero[i]=='7')draw_sprite(screen,siete,x,100);
-		if(numero[i]=='8')draw_sprite(screen,ocho,x,100);
-		if(numero[i]=='9')draw_sprite(screen,nueve,x,100);
+	//int x = 1;		
+	
+	while(!key[KEY_ESC]){
+		y+=70;
+		//x+=70;
+		y2=y;
+		x2=x;
+		inc=40;
+		ingresarnumero();
+		imprimirimagen();
+		int n = retornarEntero();
+		if(n<=50){
+			x-=70;
+			line(screen, x2-80, y2+50, x2+(80-inc), y2+80, 32);
+		}else{
+			x+=70;
+			line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
+		}
 		
-		x+=50;
+			
 	}
-
-	textprintf(screen,font,50,50,150,"%d",(n));
-
-	
-	
 	readkey();
-	
-	
-
 	deinit();
 	return 0;
 }
