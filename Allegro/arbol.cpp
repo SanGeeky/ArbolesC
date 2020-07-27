@@ -4,6 +4,18 @@
 void init();
 void deinit();
 char *numero = new char[5]; 
+BITMAP *cero;
+BITMAP *uno;
+BITMAP *dos;
+BITMAP *tres;
+BITMAP *cuatro;
+BITMAP *cinco;
+BITMAP *seis;
+BITMAP *siete;
+BITMAP *ocho;
+BITMAP *nueve;
+int x=0;
+int y=0;
 
 
 int retornarEntero() //castea el char de caracteres
@@ -29,6 +41,42 @@ int retornarEntero() //castea el char de caracteres
 	return n;
 }
 
+void ingresarnumero(){
+	delete[] numero;
+	//char *numero = new char[5];
+	for(int i = 0; i < 3; i++ )
+		numero[i]=NULL;
+	
+	int f=0;
+	while(!key[KEY_ENTER] || f<3){
+		char ascii=readkey();
+		if(key[KEY_ENTER]) break;
+		textprintf(screen,font,x,10,150,"%c",(ascii));
+		x+=8;
+		numero[f]=ascii;
+		f++;
+	}
+}
+
+void imprimirimagen(){
+	
+	for ( int i = 0; i < 3; i++)
+	{
+		if(numero[i]=='0')draw_sprite(screen,cero,x,y);
+		if(numero[i]=='1')draw_sprite(screen,uno,x,y);
+		if(numero[i]=='2')draw_sprite(screen,dos,x,y);
+		if(numero[i]=='3')draw_sprite(screen,tres,x,y);
+		if(numero[i]=='4')draw_sprite(screen,cuatro,x,y);
+		if(numero[i]=='5')draw_sprite(screen,cinco,x,y);
+		if(numero[i]=='6')draw_sprite(screen,seis,x,y);
+		if(numero[i]=='7')draw_sprite(screen,siete,x,y);
+		if(numero[i]=='8')draw_sprite(screen,ocho,x,y);
+		if(numero[i]=='9')draw_sprite(screen,nueve,x,y);
+		
+		x+=50;
+	}
+}
+
 
 
 int main() {
@@ -36,16 +84,7 @@ int main() {
 	BITMAP *buffer;
 	buffer = create_bitmap(1080, 720);
 	clear_to_color(buffer, 0xFFFFFF);
-	BITMAP *cero;
-	BITMAP *uno;
-	BITMAP *dos;
-	BITMAP *tres;
-	BITMAP *cuatro;
-	BITMAP *cinco;
-	BITMAP *seis;
-	BITMAP *siete;
-	BITMAP *ocho;
-	BITMAP *nueve;
+	
 
 	cero = load_bmp("numeros/0.bmp",NULL);
 	uno = load_bmp("numeros/1.bmp",NULL);
@@ -62,45 +101,14 @@ int main() {
 	//ascii=readkey();
 	
 	int x = 1;		
-	int f=0;
-	while(!key[KEY_ENTER] || f<3){
-		char ascii=readkey();
-		if(key[KEY_ENTER]) break;
-		textprintf(screen,font,x,10,150,"%c",(ascii));
-		x+=8;
-		numero[f]=ascii;
-		f++;
-		/* if(key[KEY_0]){	
-			draw_sprite(screen,cero,500,0);
-		} */
-	}
-
-	int n = retornarEntero();
-	x=0;
-	for ( int i = 0; i < 3; i++)
-	{
-		if(numero[i]=='0')draw_sprite(screen,cero,x,100);
-		if(numero[i]=='1')draw_sprite(screen,uno,x,100);
-		if(numero[i]=='2')draw_sprite(screen,dos,x,100);
-		if(numero[i]=='3')draw_sprite(screen,tres,x,100);
-		if(numero[i]=='4')draw_sprite(screen,cuatro,x,100);
-		if(numero[i]=='5')draw_sprite(screen,cinco,x,100);
-		if(numero[i]=='6')draw_sprite(screen,seis,x,100);
-		if(numero[i]=='7')draw_sprite(screen,siete,x,100);
-		if(numero[i]=='8')draw_sprite(screen,ocho,x,100);
-		if(numero[i]=='9')draw_sprite(screen,nueve,x,100);
-		
-		x+=50;
-	}
-
-	textprintf(screen,font,50,50,150,"%d",(n));
-
 	
-	
+	while(!key[KEY_ESC]){
+		y+=100;
+		ingresarnumero();
+		imprimirimagen();
+		int n = retornarEntero();	
+	}
 	readkey();
-	
-	
-
 	deinit();
 	return 0;
 }
