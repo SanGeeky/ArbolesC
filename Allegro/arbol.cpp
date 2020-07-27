@@ -1,24 +1,47 @@
 #include <allegro.h>
+#include <iostream>
 
 void init();
 void deinit();
+char *numero = new char[5]; 
+
+
+
+
 
 int main() {
 	init();
-	
 	BITMAP *buffer;
 	buffer = create_bitmap(1080, 720);
 	clear_to_color(buffer, 0xFFFFFF);
 	BITMAP *cero;
 	cero = load_bmp("numeros/0.bmp",NULL);
 	draw_sprite(screen,buffer,0,0);
-	line(screen, 0, 0, 500, 500, 32);
-	readkey();
-	if(key[KEY_0]){
-		
-		draw_sprite(screen,cero,500,0);
-		
+	//line(screen, 0, 0, 500, 500, 32);
+	//ascii=readkey();
+	
+	int x = 1;		
+	int f=0;
+	while(!key[KEY_ENTER] || f<3){
+		char ascii=readkey();
+	
+		textprintf(screen,font,x,10,150,"%c",(ascii));
+		x+=8;
+		numero[f]=ascii;
+		f++;
+		/* if(key[KEY_0]){	
+			draw_sprite(screen,cero,500,0);
+		} */
 	}
+	x=0;
+	for ( int i = 0; i < 3; i++)
+	{
+		if(numero[i]=='0')draw_sprite(screen,cero,x,100);
+		
+		x+=60;
+	}
+	
+	
 	readkey();
 	
 	
