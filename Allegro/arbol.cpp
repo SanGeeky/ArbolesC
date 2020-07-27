@@ -21,7 +21,231 @@ int x2=0;
 int y2=0;
 int inc=0;
 int xdis=0;
+using namespace::std;
 
+string stexto;
+       
+      FONT *fuente;
+ 
+      // ancho total del texto enviado
+      int tancho;    
+      int talto; 
+      int espaciado;
+     
+      // para delimitar el rectangulo de vision     
+      int mx1,my1;
+      int mx2,my2;
+      // ancho y alto del rectangulo
+      int ancho, alto;     
+       
+      // numero de lineas totales q caben en el rectangulo
+      int nlineas;
+
+
+
+class MENSAJE{
+       
+      string stexto;
+       
+      FONT *fuente;
+ 
+      // ancho total del texto enviado
+      int tancho;    
+      int talto; 
+      int espaciado;
+     
+      // para delimitar el rectangulo de vision     
+      int mx1,my1;
+      int mx2,my2;
+      // ancho y alto del rectangulo
+      int ancho, alto;     
+       
+      // numero de lineas totales q caben en el rectangulo
+      int nlineas;
+ 
+      void numlineas(); 
+       
+   public:  
+ 
+      void crea(const char* t, FONT* f, int x1, int y1, int x2, int y2);
+            
+      void pinta(BITMAP* b);
+       
+      void cambia_texto( const char* t );
+       
+};
+
+
+int menor(int x, int y){
+    if ( x < y ){
+       return x;  
+    }else{
+       return y;   
+    }       
+}
+
+int mayor(int x, int y){
+    if ( x < y ){
+       return y;  
+    }else{
+       return x;   
+    }       
+}
+
+void pinta(BITMAP* b){
+     int cont;
+     int espacio = 0;
+     char* mtexto = (char*)stexto.c_str();
+     int linea=0;
+     int ni;
+     int altura = 0;
+     float exacto;
+     BITMAP *cuadro = create_bitmap(ancho,alto);
+ 
+      
+    clear_to_color(cuadro, 0x222222);
+    set_trans_blender(0,0,0,130);         
+    draw_trans_sprite(b, cuadro, mx1, my1);               
+    set_trans_blender(0,0,0,255);         
+     
+    rect(b, mx1-1, my1-1, mx2-1, my2-1, 0xfcf902);
+    rect(b, mx1+1, my1+1, mx2+1, my2+1, 0x363712);      
+    rect(b, mx1, my1, mx2, my2, 0x222222);
+        
+      
+     if ( tancho+espaciado > ancho ){
+        // no cabe en una linea  
+        string resto = stexto;
+        string trozo;
+        char caracter[] = " ";
+        char* caracter2;
+        int nuevoancho = 0;
+        int nc = 0;
+        int restoancho = 0;
+         
+         do{      
+                cont=1;
+                trozo = resto.substr(0,cont);
+                mtexto = (char*)trozo.c_str();
+                nuevoancho = text_length( fuente, mtexto ); 
+                espacio = 0;                   
+                while ( nuevoancho+espaciado < ancho ){
+                      trozo = resto.substr(cont,1);
+                      caracter2  = (char*)trozo.c_str();
+                      if ( strcmp(caracter2,caracter)==0 ){
+                           espacio = cont;
+                      }
+                      cont++;
+                      trozo = resto.substr(0,cont);
+                      mtexto = (char*)trozo.c_str();
+                      nuevoancho = text_length( fuente, mtexto ); 
+                } 
+                nc = resto.length();
+                trozo = resto.substr(cont,1);
+                caracter2  = (char*)trozo.c_str();
+                 
+                if ( espacio >0 && cont < nc && strcmp(caracter2,caracter)!=0 ){
+                     trozo = resto.substr(0,espacio);
+                     mtexto = (char*)trozo.c_str();             
+                     resto = resto.substr(espacio);
+                }else{
+                     trozo = resto.substr(0,cont);
+                     mtexto = (char*)trozo.c_str();              
+                     resto = resto.substr(cont); 
+                }
+                 
+                      
+                altura = alto - (talto*nlineas);
+                exacto = ( alto / nlineas );
+                ni = int( exacto );
+         
+                textout_centre_ex(b, fuente, mtexto, mx1+1+int(ancho/2), my1+2+(ni*linea)-(talto/2)+(ni/2) , 0x363712, -1);                        
+                textout_centre_ex(b, fuente, mtexto, mx1+int(ancho/2), my1+1+(ni*linea)-(talto/2)+(ni/2) , 0xffffff, -1);            
+                 
+                linea++;   
+                restoancho = text_length( fuente, resto.c_str() );
+         }while( restoancho+espaciado > ancho ); 
+         
+        mtexto = (char*)resto.c_str(); 
+        textout_centre_ex(b, fuente, mtexto, mx1+1+int(ancho/2), my1+2+(ni*linea)-(talto/2)+(ni/2) , 0x363712, -1);                        
+        textout_centre_ex(b, fuente, mtexto, mx1+int(ancho/2), my1+1+(ni*linea)-(talto/2)+(ni/2) , 0xffffff, -1);            
+                 
+     }else{
+            
+         textout_centre_ex(b, fuente, mtexto, mx1+(ancho/2)+1, my1+1+((alto-talto)/2), 0x363712, -1);          
+         textout_centre_ex(b, fuente, mtexto, mx1+(ancho/2), my1+((alto-talto)/2), 0xffffff, -1);           
+           
+     }   
+      
+ 
+     destroy_bitmap(cuadro);    
+    
+};     
+
+void numlineas(){
+     int cont;
+     int espacio = 0;
+     char* mtexto = (char*)stexto.c_str();
+     nlineas=1;
+      
+     if ( tancho+espaciado > ancho ){
+        // no cabe en una linea  
+        string resto = stexto;
+        string trozo;
+        char caracter[] = " ";
+        char* caracter2;
+        int nuevoancho = 0;
+        int nc = 0;
+        int restoancho = 0;
+        do{     
+                cont=1;
+                trozo = resto.substr(0,cont);
+                mtexto = (char*)trozo.c_str();
+                nuevoancho = text_length( fuente, mtexto ); 
+                espacio = 0;                   
+                while ( nuevoancho+espaciado < ancho ){
+                      trozo = resto.substr(cont,1);
+                      caracter2 = (char*)trozo.c_str();
+                      if ( strcmp(caracter2,caracter)==0 ){
+                           espacio = cont;
+                      }
+                      cont++;
+                      trozo = resto.substr(0,cont);
+                      mtexto = (char*)trozo.c_str();
+                      nuevoancho = text_length( fuente, mtexto ); 
+                } 
+                nc = resto.length();
+                trozo = resto.substr(cont,1);
+                caracter2 = (char*)trozo.c_str();        
+                nlineas++;
+                if ( espacio >0 && cont < nc && strcmp(caracter2,caracter)!=0 )
+                {
+                     resto = resto.substr(espacio);
+                }else{
+                     resto = resto.substr(cont); 
+                }        
+                restoancho = text_length( fuente, resto.c_str() );
+        }while( restoancho+espaciado > ancho );      
+                
+     }          
+}
+
+void crea(const char* t, FONT* f, int x1, int y1, int x2, int y2){
+   stexto = t;
+   tancho = text_length( f, t );   
+   talto  = text_height(f) + espaciado;
+   fuente = f;
+    
+   mx1 = menor(x1,x2);
+   mx2 = mayor(x1,x2);
+   my1 = menor(y1,y2);
+   my2 = mayor(y1,y2);
+   ancho = abs( mx1 - mx2 );
+   alto  = abs( my1 - my2 );
+    
+   numlineas();
+ 
+};
 
 int retornarEntero() //castea el char de caracteres
 {
@@ -108,7 +332,13 @@ int main() {
 	//line(screen, 0, 0, 500, 500, 32);
 	//ascii=readkey();
 	
-	//int x = 1;		
+	//int x = 1;	
+	
+	//MENSAJE.crea("        EL Andariego          Proyecto en c++ y allegro Udenar 2020",font, 5,5,230,60 );
+	crea("                                         HOLAA BIENVENIDO A NUESTRO SIMULADOR DE ARBOLES AVL                                      *Digita cualquier numero seguido de un enter para asi armar tu arbol AVL                                                    *Presiona 0 luego un Enter para borrar el arbol y empezar de nuevo          *Presiona ESC para salir del programa          *Universidad de Narino 2020", font, 10, 550, 1070, 710); 
+	pinta(screen);
+	//MENSAJE.crea("L",FONT,5,5,230,60);	
+	
 	
 	while(!key[KEY_ESC]){
 		y+=70;
@@ -121,7 +351,7 @@ int main() {
 		int n = retornarEntero();
 		if(n<=50){
 			x-=70;
-			line(screen, x2-80, y2+50, x2+(80-inc), y2+80, 32);
+			line(screen, x2, y2+50, x2-(inc*1.1), y2+80, 32);
 		}else{
 			x+=70;
 			line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
