@@ -311,35 +311,94 @@ void imprimirimagen(){
 	}
 }
 
+char retornarChar(int numero)
+{
+	char *numerografico = new char[5];
+	for(int i = 0; i < 3; i++ )
+			numerografico[i]=NULL;
+
+	int unidad = numero % 10;
+	int decena = (numero / 10) % 10;
+	int centena = (numero / 10) / 10;
+
+	if(centena>0)
+	{
+		numerografico[0]=48+centena;
+		numerografico[1]=48+decena;
+		numerografico[2]=48+unidad;
+	}
+	else if (decena > 0)
+	{
+		numerografico[0]=48+decena;
+		numerografico[1]=48+unidad;
+	}
+	else{
+		numerografico[0]=48+unidad;
+	}
+
+	return *numerografico;
+	
+}
+
 void graficarArbolAllegro(arbol *recorrer, int x, int y){
+	
+	//char *numerografico = new char[5];
 	
 	if(recorrer==NULL)
         return;
         
     graficarArbolAllegro(recorrer->dere, x+50, y+60);
-    
-    //gotoxy(x,y); cprintf("%d", recorrer->dato);	
-	textprintf(screen,font,x,y,150,"%d",(recorrer->dato));
 
-    //xdis=x;
+    char *numerografico = new char[5]; int numero = recorrer->dato;
+	for(int i = 0; i < 3; i++ )
+			numerografico[i]=NULL;
+
+	int unidad = numero % 10;
+	int decena = (numero / 10) % 10;
+	int centena = (numero / 10) / 10;
+
+	if(centena>0)
+	{
+		numerografico[0]=48+centena;
+		numerografico[1]=48+decena;
+		numerografico[2]=48+unidad;
+	}
+	else if (decena > 0)
+	{
+		numerografico[0]=48+decena;
+		numerografico[1]=48+unidad;
+	}
+	else{
+		numerografico[0]=48+unidad;
+	}
+
+    
+	//char *numerografico = {retornarChar(recorrer->dato)[0],}retornarChar(recorrer->dato);
+
+	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[0]));
+	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[1]));
+	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[2]));
+	//textprintf(screen,font,x,y,150,"%d",(recorrer->dato));
+	
+    xdis=x;
     
 	
-	/* for ( int i = 0; i < 3; i++)
+	for ( int i = 0; i < 3; i++)
 	{
 		
-		if(numero[i]=='0')draw_sprite(screen,cero,xdis,y);
-		if(numero[i]=='1')draw_sprite(screen,uno,xdis,y);
-		if(numero[i]=='2')draw_sprite(screen,dos,xdis,y);
-		if(numero[i]=='3')draw_sprite(screen,tres,xdis,y);
-		if(numero[i]=='4')draw_sprite(screen,cuatro,xdis,y);
-		if(numero[i]=='5')draw_sprite(screen,cinco,xdis,y);
-		if(numero[i]=='6')draw_sprite(screen,seis,xdis,y);
-		if(numero[i]=='7')draw_sprite(screen,siete,xdis,y);
-		if(numero[i]=='8')draw_sprite(screen,ocho,xdis,y);
-		if(numero[i]=='9')draw_sprite(screen,nueve,xdis,y);
+		if(numerografico[i]=='0')draw_sprite(screen,cero,xdis,y);
+		if(numerografico[i]=='1')draw_sprite(screen,uno,xdis,y);
+		if(numerografico[i]=='2')draw_sprite(screen,dos,xdis,y);
+		if(numerografico[i]=='3')draw_sprite(screen,tres,xdis,y);
+		if(numerografico[i]=='4')draw_sprite(screen,cuatro,xdis,y);
+		if(numerografico[i]=='5')draw_sprite(screen,cinco,xdis,y);
+		if(numerografico[i]=='6')draw_sprite(screen,seis,xdis,y);
+		if(numerografico[i]=='7')draw_sprite(screen,siete,xdis,y);
+		if(numerografico[i]=='8')draw_sprite(screen,ocho,xdis,y);
+		if(numerografico[i]=='9')draw_sprite(screen,nueve,xdis,y);
 		xdis+=35;
 		
-	} */
+	}
 	
     graficarArbolAllegro(recorrer->izq, x-50, y+60);
     x=540; y=0;
