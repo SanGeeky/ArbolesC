@@ -21,7 +21,8 @@ int x=540;
 int y=0;
 int x2=0;
 int y2=0;
-int inc=0;
+int incI=50;
+int incD=50;
 int xdis=0;
 using namespace::std;
 
@@ -280,8 +281,15 @@ void ingresarnumero(){
 	
 	int f=0;
 	while(!key[KEY_ENTER] || f<3){
+      
 		char ascii=readkey();
-		if(key[KEY_ENTER]) break;
+		if(key[KEY_ENTER]){
+         clear_bitmap(screen);
+         clear_to_color(screen, 0xFFFFFF);
+         crea("                                         HOLAA BIENVENIDO A NUESTRO SIMULADOR DE ARBOLES AVL                                      *Digita cualquier numero seguido de un enter para asi armar tu arbol AVL                                                    *Presiona 0 luego un Enter para borrar el arbol y empezar de nuevo          *Presiona ESC para salir del programa          *Universidad de Narino 2020", font, 10, 550, 1070, 710); 
+	      pinta(screen);
+         break;
+      } 
 		textprintf(screen,font,xm,10,150,"%c",(ascii));
 		xm+=8;
 		numero[f]=ascii;
@@ -340,15 +348,20 @@ char retornarChar(int numero)
 	
 }
 
-void graficarArbolAllegro(arbol *recorrer, int x, int y){
+void graficarArbolAllegro(arbol *recorrer, int xinterno, int yinterno, int incremento, int xanterior, int yanterior){
 	
 	//char *numerografico = new char[5];
 	
+
+	
 	if(recorrer==NULL)
         return;
-        
-    graficarArbolAllegro(recorrer->dere, x+50, y+60);
+    
+    
+    graficarArbolAllegro(recorrer->dere, xinterno + incremento, yinterno+80, incremento-38,xinterno,yinterno);
+    graficarArbolAllegro(recorrer->izq, xinterno - incremento, yinterno+80, incremento-38,xinterno,yinterno);
 
+	
     char *numerografico = new char[5]; int numero = recorrer->dato;
 	for(int i = 0; i < 3; i++ )
 			numerografico[i]=NULL;
@@ -374,34 +387,40 @@ void graficarArbolAllegro(arbol *recorrer, int x, int y){
 
     
 	//char *numerografico = {retornarChar(recorrer->dato)[0],}retornarChar(recorrer->dato);
-
+	/*
 	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[0]));
 	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[1]));
 	textprintf(screen,font,x-50,y+50,150," %d ",(numerografico[2]));
+	*/
 	//textprintf(screen,font,x,y,150,"%d",(recorrer->dato));
 	
-    xdis=x;
-    
-	
+	xdis=xinterno;
 	for ( int i = 0; i < 3; i++)
 	{
 		
-		if(numerografico[i]=='0')draw_sprite(screen,cero,xdis,y);
-		if(numerografico[i]=='1')draw_sprite(screen,uno,xdis,y);
-		if(numerografico[i]=='2')draw_sprite(screen,dos,xdis,y);
-		if(numerografico[i]=='3')draw_sprite(screen,tres,xdis,y);
-		if(numerografico[i]=='4')draw_sprite(screen,cuatro,xdis,y);
-		if(numerografico[i]=='5')draw_sprite(screen,cinco,xdis,y);
-		if(numerografico[i]=='6')draw_sprite(screen,seis,xdis,y);
-		if(numerografico[i]=='7')draw_sprite(screen,siete,xdis,y);
-		if(numerografico[i]=='8')draw_sprite(screen,ocho,xdis,y);
-		if(numerografico[i]=='9')draw_sprite(screen,nueve,xdis,y);
+		if(numerografico[i]=='0')draw_sprite(screen,cero,xdis,yinterno);
+		if(numerografico[i]=='1')draw_sprite(screen,uno,xdis,yinterno);
+		if(numerografico[i]=='2')draw_sprite(screen,dos,xdis,yinterno);
+		if(numerografico[i]=='3')draw_sprite(screen,tres,xdis,yinterno);
+		if(numerografico[i]=='4')draw_sprite(screen,cuatro,xdis,yinterno);
+		if(numerografico[i]=='5')draw_sprite(screen,cinco,xdis,yinterno);
+		if(numerografico[i]=='6')draw_sprite(screen,seis,xdis,yinterno);
+		if(numerografico[i]=='7')draw_sprite(screen,siete,xdis,yinterno);
+		if(numerografico[i]=='8')draw_sprite(screen,ocho,xdis,yinterno);
+		if(numerografico[i]=='9')draw_sprite(screen,nueve,xdis,yinterno);
 		xdis+=35;
 		
 	}
+
+	if (recorrer != NULL)
+	{
+		line(screen, xinterno+40, yinterno, xanterior, yinterno+150, 32);
+		line(screen, xinterno+40, yinterno, xinterno, yinterno+150, 32);
+	}
 	
-    graficarArbolAllegro(recorrer->izq, x-50, y+60);
-    x=540; y=0;
+
+	
+    //x=540; y=0;
 }
 
 
@@ -435,11 +454,12 @@ int main() {
 	
 	
 	while(!key[KEY_ESC]){
+      
 		//y+=70;
 		//x+=70;
 		y2=y;
 		x2=x;
-		inc=40;
+		
 
 		ingresarnumero();
 		//imprimirimagen();
@@ -447,14 +467,28 @@ int main() {
 		//Aqui agrega el nuevo nodo al arbol
       	agregarDatos(n);
 		recorrer=raiz;
-		graficarArbolAllegro(recorrer,x,y);
-		if(n<=50){
-			//x-=70;
-			line(screen, x2, y2+50, x2-(inc*1.1), y2+80, 32);
-		}else{
+		int capas = altura(recorrer);
+		graficarArbolAllegro(recorrer,520,25,50*capas,520,25);
+      
+		/* 
+      int izq = alturaIzquierda(recorrer);
+      int der = alturaDerecha(recorrer);
+		if(izq == 3){
+			incI+=80;
+         incD+=15;
+			//line(screen, x2, y2+50, x2-(inc*1.1), y2+80, 32);
+		}else if(der == 3){
+         incD+=80;
+         incI+=15;
+      }else if(izq>3 || der >3){
+         incD+=15;
+         incI+=15;
+      }
+		/*else{
 			//x+=70;
-			line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
-		}
+			//line(screen, x2+80, y2+50, x2+(80+inc), y2+80, 32);
+		}*/ 
+		
 		
 			
 	}

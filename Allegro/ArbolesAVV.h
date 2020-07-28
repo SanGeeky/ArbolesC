@@ -432,6 +432,29 @@ int altura(arbol *recorrer){
 	}
 }
 
+int alturaIzquierda(arbol *recorrer){
+	if (recorrer == NULL)//Si el nodo est� vaci� entonces que salga.
+		return 0 ; //Devuelve el valor cero.
+	else{
+		recorrer->alturaIzq=altura (recorrer->izq);
+		//recorrer->fe=recorrer->alturaDere-recorrer->alturaIzq;
+		
+		return recorrer->alturaIzq + 1;
+		
+	}
+}
+
+int alturaDerecha(arbol *recorrer){
+	if (recorrer == NULL)//Si el nodo est� vaci� entonces que salga.
+		return 0 ; //Devuelve el valor cero.
+	else{
+		recorrer->alturaDere=altura (recorrer->dere);
+
+		return recorrer->alturaDere + 1;
+	}
+}
+
+
 
 /*
 Esta funci�n analiza durante una busqueda si existe un factor de equilibrio que sea 2 o -2, si fuera el caso apunta al padre a ese nodo y

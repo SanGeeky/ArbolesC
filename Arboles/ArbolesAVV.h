@@ -855,4 +855,19 @@ void intro(){
     
 	return 0;
 }
+ */    gotoxy(25,8);cprintf("By. Melvin Cante");
+    gotoxy(2,20);cprintf(".");
+    
+	return 0;
+}
+ */    gotoxy(25,8);cprintf("By. Melvin Cante");
+    gotoxy(2,20);cprintf(".");
+    
+	return 0;
+}
+ */    gotoxy(25,8);cprintf("By. Melvin Cante");
+    gotoxy(2,20);cprintf(".");
+    
+	return 0;
+}
  */
