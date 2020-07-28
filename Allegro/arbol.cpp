@@ -412,10 +412,12 @@ void graficarArbolAllegro(arbol *recorrer, int xinterno, int yinterno, int incre
 		
 	}
 
-	if (recorrer != NULL)
+	if (recorrer != NULL && recorrer!=raiz)
 	{
-		line(screen, xinterno+40, yinterno, xanterior, yinterno+150, 32);
-		line(screen, xinterno+40, yinterno, xinterno, yinterno+150, 32);
+		line(screen, xinterno+40, yinterno, xanterior+40, yanterior+50, 32); /// Linea izquierda a Derecha  Backslahs
+ 		line(screen, xinterno+40, yinterno, xanterior+40, yanterior+50, 32); /// Linez de Derecha a Izquier Slash
+		/* line(screen, xinterno+40, yinterno, xinterno+80, yinterno+150, 32);
+		line(screen, xinterno+40, yinterno+50, xinterno, yinterno+150, 32); */
 	}
 	
 
