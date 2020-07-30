@@ -43,7 +43,29 @@ arbol *PadreAB, *sHijo, *abuelo, *hijoHijo;
 
 void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *padre);
 void agregarDatos();
-void verArbol(arbol recorrer, int n);
+void verArbol(arbol *recorrer, int n);
+void vaciarArbol(arbol *recorrer);
+
+void postorden(arbol *recorrerinterno){
+  	if (recorrerinterno != NULL) {
+    	postorden(recorrerinterno->izq);
+    	postorden(recorrerinterno->dere);
+  	}
+}
+
+
+void vaciarArbol(arbol *recorrerinterno){
+  	if (recorrerinterno != NULL) {
+    	postorden(recorrerinterno->izq);
+    	postorden(recorrerinterno->dere);
+    	
+    	if (recorrerinterno->dato == raiz->dato){
+    		raiz=NULL;
+		}else{
+			delete(recorrerinterno);//Liberamos la memoria.
+		}
+  	}
+}
 
 void graficarArbol(arbol *recorrer, int x, int y)
 {
@@ -57,6 +79,7 @@ void graficarArbol(arbol *recorrer, int x, int y)
     cprintf("%d", recorrer->dato);
 
     graficarArbol(recorrer->izq, x - 5, y + 1);
+
 }
 
 void verArbol(arbol *recorrer, int n)
@@ -172,7 +195,7 @@ void listar(nodo *list)
     if (list != NULL)
     {
         aux = list;
-        cout << "pri:    \n";
+        cout << "LISTA ORDENADA:    \n\n";
         while (aux != NULL)
         {
             cout << aux->inf << " -> ";
@@ -180,9 +203,9 @@ void listar(nodo *list)
         }
     }
     else
-        cout << "Cola VACIA....\n";
-    cin.ignore();
-    cin.get();
+        cout << "Lista VACIA....\n";
+    cout << "\n\n";
+    system("PAUSE");
 }
 
 void listar2(nodo2 *list2)
@@ -191,7 +214,7 @@ void listar2(nodo2 *list2)
     if (list2 != NULL)
     {
         aux3 = list2;
-        cout << "pri:    \n";
+        cout << "Lista ORIGINAL:    \n\n";
         while (aux3 != NULL)
         {
             cout << aux3->inf2 << " -> ";
@@ -199,7 +222,10 @@ void listar2(nodo2 *list2)
         }
     }
     else
-        cout << "Cola VACIA....\n";
+        cout << "Lista VACIA....\n";
+    
+    cout << "\n\n";
+    system("PAUSE");
 
 }
 
@@ -208,9 +234,17 @@ void ingresar() // Genera lista de aleatorios
     vaciarlista();
 
     srand(time(NULL));
-    int num, count;
-    cout << "Digite de que tamaño desea la lista(minimo 30)";
-    cin >> count;
+    int num, count=0;
+    
+    do{
+        system("cls");
+        cout << "Digite de que tamanio desea la lista(minimo 30): ";
+        cin >> count;
+        if(count<30){
+            cout<<"debe ser mas de 30"<<endl;
+            getch();
+        }
+    }while(count<30);
     for (int i = 0; i < count; i++)
     {
         if (pri == NULL)
@@ -288,9 +322,6 @@ void ingresar() // Genera lista de aleatorios
         }
     }
     listar2(pri2);
-    cout << "\n";
-    listar(pri);
-    system("PAUSE");
 }
 
 
@@ -565,20 +596,46 @@ void inicializar()
     if (pri != NULL)
     {
         aux = pri;
-        while (aux != NULL)
+        aux3 = pri2;
+        auxPadre = priPadre;
+        auxHijo = auxHijo;
+        while (aux3 != NULL)
         {
-            cout << "Liberado: " << aux->inf << endl;
-            pri = aux->sig;
-            delete aux;
-            aux = pri;
+
+            if (aux != NULL)
+            {
+                pri = aux->sig;
+                delete aux;
+                aux = pri;
+            }
+            
+            if (auxPadre != NULL)
+            {
+                priPadre = auxPadre->sig;
+                delete auxPadre;
+                auxPadre = priPadre; 
+            }
+
+            if (auxHijo != NULL)
+            {
+                auxHijo = auxHijo->sig;
+                delete auxHijo;
+                auxHijo = auxHijo; 
+            }
+
+            cout << "Liberado: " << aux3->inf2 << endl;
+            
+            pri2 = aux3->sig2;
+           
+            delete aux3; 
+            aux3 = pri2; 
         }
     }
+    recorrer = raiz;
+    vaciarArbol(recorrer);
     cout << "Lista VACIA....\n";
-    //se dice un sistem pause y que pida una tecla
-    cin.ignore();
-    cin.get();
-    // y reemplaza system pause y le quita una tecla par continuar
-    // se las trabaja juntas
+
+
 }
 
 void menu()
@@ -591,38 +648,44 @@ void menu()
             system("cls");
             cout << "MENU DE OPCIONES"
                  << "\n1. Generar lista de numero aleatorios: "
-                 << "\n2. Mostrar lista sin datos repetidos y ordenada: "
-                 << "\n3. Generar Grafo"
-                 << "\n4. Generar Arbol Binario"
-                 << "\n5. Limpiar Estructuras"
+                 << "\n2. Mostrar Lista Original: "
+                 << "\n3. Mostrar lista sin datos repetidos y ordenada: "
+                 << "\n4. Generar y Mostrar Grafo"
+                 << "\n5. Generar y Mostrar Arbol Binario"
+                 << "\n6. Limpiar Estructuras"
 
-                 << "\n6. Salir"
+                 << "\n9. Salir"
                  << "\nOpcion:  ";
             cin >> op;
-        } while (op < 1 || op > 6);
+        } while (op < 1 || op > 9);
         switch (op)
         {
         case 1:
             ingresar();
             break;
         case 2:
-            listar(pri);
+            listar2(pri2);
             break;
         case 3:
-            generarGrafo();
+            listar(pri);
             break;
         case 4:
-            agregarDatos();
-            system("PAUSE");
+            generarGrafo();
             break;
         case 5:
-            inicializar();
+            agregarDatos();
+            gotoxy(1,1);system("pause");
             break;
         case 6:
-            sacarLista(); //se puede sacar cualquiera de la lista
+            inicializar();
+            inicializar();
+            cin.ignore();
+            cin.get();
+
             break;
+
         }
-    } while (op != 6);
+    } while (op != 9);
 }
 
 int main()
