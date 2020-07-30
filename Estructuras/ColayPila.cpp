@@ -3,6 +3,7 @@
 #include <conio.h>
 
 using namespace std;
+	
 
 struct Pila{
 	int inf ;
