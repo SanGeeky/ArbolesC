@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <conio.h>
 
 using namespace std;
 
@@ -30,6 +31,126 @@ struct listaHijo
     struct listaHijo *ant;
     struct listaPadre *padre;
 } * priHijo, *ultHijo, *nueHijo, *auxHijo, *datoHijo;
+
+typedef struct nodoArbol
+{
+    int dato;
+    struct nodoArbol *izq, *dere, *padre;
+    int fe, alturaIzq, alturaDere;
+} arbol, *parbol;
+arbol *raiz, *nuevo, *recorrer;
+arbol *PadreAB, *sHijo, *abuelo, *hijoHijo;
+
+void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *padre);
+void agregarDatos();
+void verArbol(arbol recorrer, int n);
+
+void graficarArbol(arbol *recorrer, int x, int y)
+{
+
+    if (recorrer == NULL)
+        return;
+
+    graficarArbol(recorrer->dere, x + 5, y + 1);
+
+    gotoxy(x, y);
+    cprintf("%d", recorrer->dato);
+
+    graficarArbol(recorrer->izq, x - 5, y + 1);
+}
+
+void verArbol(arbol *recorrer, int n)
+{
+    if (recorrer == NULL)
+        return;
+    verArbol(recorrer->dere, n + 1);
+
+    for (int i = 0; i < n; i++)
+        cout << "   ";
+
+    cout << recorrer->dato << endl;
+
+    verArbol(recorrer->izq, n + 1);
+}
+
+parbol nuevoNodo(int num)
+{
+    nuevo = new (arbol); //Crea la reserva de espacio en memoria.
+    nuevo->dato = num;
+    nuevo->izq = NULL;  //Punteros a tierra
+    nuevo->dere = NULL; //Punteros a tierra
+
+    return nuevo;
+}
+
+void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *PadreAB)
+{
+
+    if (raiz == NULL)
+    {                 //Si es el primer nodo entonces la raíz aún será nula porque no existe nada dentro de ella.
+        raiz = nuevo; //Asignar a la raíz el valor del nuevo nodo creado...
+        raiz->padre = NULL;
+    }
+    else
+    {
+        if (nuevo->dato <= recorrer->dato)
+        {
+            if (recorrer->izq != NULL)
+            {
+                PadreAB = recorrer->izq;
+                //BBcout<<"Padre: "<<PadreAB->dato<<" Nuevo: "<<nuevo->dato<<endl;
+                insertarNuevo(recorrer->izq, nuevo, PadreAB);
+            }
+            else
+            {
+                recorrer->izq = nuevo;
+                nuevo->padre = PadreAB;
+                return;
+            }
+        }
+        else if (nuevo->dato > recorrer->dato)
+        {
+            if (recorrer->dere != NULL)
+            {
+                PadreAB = recorrer->dere;
+                //BBcout<<"Padre: "<<PadreAB->dato<<" Nuevo: "<<nuevo->dato<<endl;
+                insertarNuevo(recorrer->dere, nuevo, PadreAB);
+            }
+            else
+            {
+                recorrer->dere = nuevo;
+                nuevo->padre = PadreAB;
+                return;
+            }
+        }
+    }
+}
+
+void agregarDatos()
+{
+    system("cls");
+    cout << "\nArbol " << endl;
+    aux3 = pri2;
+    while (aux3 != NULL)
+    {
+
+        recorrer = raiz; //Se apunta a recorrer en al mismo nodo donde apunta la raíz
+
+        nuevo = nuevoNodo(aux3->inf2); //Almacena el nuevo nodo para luego insertarlo en el arbol.
+
+        //Evalua si el nodo ya existe en el arbol.
+        PadreAB = raiz;
+        insertarNuevo(recorrer, nuevo, PadreAB);
+
+        //BBaltura(recorrer);
+        //BBnecesidadEquilibrar(recorrer);
+
+        aux3 = aux3->sig2;
+    }
+    //verArbol(raiz,0);
+    graficarArbol(recorrer, 40, 5);
+    //system("PAUSE");
+}
 
 void vaciarlista()
 {
@@ -79,8 +200,7 @@ void listar2(nodo2 *list2)
     }
     else
         cout << "Cola VACIA....\n";
-    cin.ignore();
-    cin.get();
+
 }
 
 void ingresar() // Genera lista de aleatorios
@@ -173,6 +293,72 @@ void ingresar() // Genera lista de aleatorios
     system("PAUSE");
 }
 
+
+void imprimirGrafo()
+{
+    if (priPadre == NULL)
+        cout << "\nNo hay datos.";
+    else
+    {
+        auxPadre = priPadre;
+        while (auxPadre != NULL)
+        {
+            cout << "\n\nPadre: " << auxPadre->inf;
+            auxHijo = auxPadre->hijo;
+            while (auxHijo != NULL)
+            {
+                cout << "\n\tHijo: " << auxHijo->inf;
+                auxHijo = auxHijo->sig;
+            }
+            auxPadre = auxPadre->sig;
+        }
+    }
+    cout << endl;
+    system("pause");
+}
+
+void insertarHijo(int dato, listaPadre *nodoPadre)
+{
+    if (nodoPadre->hijo == NULL)
+    {
+        priHijo = new listaHijo();
+        priHijo->inf = dato;
+        ultHijo = priHijo;
+        ultHijo->sig = NULL;
+        priHijo->ant = NULL;
+        priHijo->padre = nodoPadre;
+        nodoPadre->hijo = priHijo;
+    }
+    else
+    {
+        if (dato < priHijo->inf) //ingresar priHijomero nuevo
+        {
+
+            nueHijo = new listaHijo(); //reserva espacio
+            nueHijo->inf = dato;       //pide el valor
+            nueHijo->sig = priHijo;
+            priHijo->ant = nueHijo;
+            priHijo = nueHijo;
+            priHijo->ant = NULL;
+            priHijo->padre = nodoPadre;
+            nodoPadre->hijo = priHijo;
+        }
+        else
+        {
+            if (dato > ultHijo->inf)
+            {
+                nueHijo = new listaHijo();
+                nueHijo->inf = dato;
+                ultHijo->sig = nueHijo;
+                nueHijo->ant = ultHijo;
+                ultHijo = nueHijo;
+                ultHijo->sig = NULL;
+                ultHijo->padre = NULL;
+            }
+        }
+    }
+}
+
 void generarGrafo()
 {
     aux = pri;
@@ -188,82 +374,84 @@ void generarGrafo()
             ultPadre = priPadre;
             ultPadre->sig = NULL;
             priPadre->ant = NULL;
+            priPadre->hijo = NULL;
         }
         else
         {
             if (decima < priPadre->inf) //ingresar priPadremero nuevo
-        {
-
-            nuePadre = new listaPadre(); //reserva espacio
-            nuePadre->inf = decima;      //pide el valor
-            nuePadre->sig = priPadre;
-            priPadre->ant = nuePadre;
-            priPadre = nuePadre;
-            priPadre->ant = NULL;
-        }
-        else
-        {
-            if (decima > ultPadre->inf)
             {
-                nuePadre = new listaPadre();
-                nuePadre->inf = decima;
-                ultPadre->sig = nuePadre;
-                nuePadre->ant = ultPadre;
-                ultPadre = nuePadre;
-                ultPadre->sig = NULL;
+
+                nuePadre = new listaPadre(); //reserva espacio
+                nuePadre->inf = decima;      //pide el valor
+                nuePadre->sig = priPadre;
+                priPadre->ant = nuePadre;
+                priPadre = nuePadre;
+                priPadre->ant = NULL;
+                priPadre->hijo = NULL;
             }
             else
             {
-                auxPadre = priPadre;
-                while (auxPadre != NULL && decima != auxPadre->inf && decima > auxPadre->inf)
-                {   //VALIDAR QUE NO ESTE REPETIDO
-                    //
-                    datoPadre = auxPadre;
-                    auxPadre = auxPadre->sig;
-                }
-                if (auxPadre->inf == decima)
+                if (decima > ultPadre->inf)
                 {
-                    //                    cout << "Repetido...";
-                    //                    system("pause");
-                }
-                else
-                { //ingresar un numero en medio
                     nuePadre = new listaPadre();
                     nuePadre->inf = decima;
-                    datoPadre->sig = nuePadre;
-                    nuePadre->ant = datoPadre;
-                    nuePadre->sig = auxPadre;
-                    auxPadre->ant = nuePadre;
+                    ultPadre->sig = nuePadre;
+                    nuePadre->ant = ultPadre;
+                    ultPadre = nuePadre;
+                    ultPadre->sig = NULL;
+                    ultPadre->hijo = NULL;
+                }
+                else
+                {
+                    auxPadre = priPadre;
+                    while (auxPadre != NULL && decima != auxPadre->inf && decima > auxPadre->inf)
+                    { //VALIDAR QUE NO ESTE REPETIDO
+                        //
+                        datoPadre = auxPadre;
+                        auxPadre = auxPadre->sig;
+                    }
+                    if (auxPadre->inf == decima)
+                    {
+                        //                    cout << "Repetido...";
+                        //                    system("pause");
+                    }
+                    else
+                    { //ingresar un numero en medio
+                        nuePadre = new listaPadre();
+                        nuePadre->inf = decima;
+                        datoPadre->sig = nuePadre;
+                        nuePadre->ant = datoPadre;
+                        nuePadre->sig = auxPadre;
+                        nuePadre->hijo = NULL;
+
+                        auxPadre->ant = nuePadre;
+                    }
                 }
             }
         }
-        }
-        
+
         aux = aux->sig;
-
     }
 
-    while (aux != NULL)
+    ///Agregamos NODOS Hijos Yeii
+    auxPadre = priPadre;
+
+    while (auxPadre != NULL)
     {
-        
-    }
-    
-    /* if (priPadre == NULL)
-    {
-        cout << "No hay datos\n";
-        system("pause");
-    }
-    else
-    {
-        auxPadre = priPadre;
-        while (auxPadre != NULL)
+        aux = pri; //Volvemos a recorrer la lista
+        while (aux != NULL)
         {
-            cout << "\nPrincipal= " << auxPadre->inf;
-            auxPadre = auxPadre->sig;
+            decima = aux->inf / 10;
+            if (auxPadre->inf == decima)
+            {
+                insertarHijo(aux->inf, auxPadre);
+            }
+            aux = aux->sig;
         }
-        cout << endl;
-        system("pause");
-    } */
+        auxPadre = auxPadre->sig; //Seguimos con el siguiente padre
+    }
+
+    imprimirGrafo();
 }
 
 bool buscar()
@@ -424,7 +612,7 @@ void menu()
             generarGrafo();
             break;
         case 4:
-            buscar();
+            agregarDatos();
             system("PAUSE");
             break;
         case 5:
