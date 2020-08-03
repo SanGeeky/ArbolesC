@@ -22,7 +22,7 @@ class Nodo {
 };
 
 class AVL {
-			  private:
+			  public:
 			   enum {IZQUIERDO, DERECHO};
 			   // Punteros de la lista, para cabeza y nodo actual:
 			   Nodo *raiz;

@@ -401,6 +401,7 @@ int main() {
 		int n = retornarEntero();
 		//Aqui agrega el nuevo nodo al arbol
       	if(ban==1){
+			ArbolInt.Borrar(n);
 	    	//arbolVacio(recorrer, n);
 			ban=0;
 		}else{
@@ -411,8 +412,16 @@ int main() {
 		//textprintf(screen,font,100,100,150,"%d",capas++);
 		//nodo=raiz;
 		/*int capas = altura(recorrer); */
-		ArbolInt.Raiz();
-		graficarArbolAllegro(actual,500,25,50*(capas+1),500,25);	
+		//ArbolInt.Raiz();
+		if(ArbolInt.raiz == NULL)
+		{
+			clearScreen();
+		}
+		else
+		{
+			graficarArbolAllegro(ArbolInt.raiz,500,25,50*(capas+1),500,25);	
+		}
+		
 	}
 	readkey();
 	deinit();
