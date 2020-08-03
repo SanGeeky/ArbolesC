@@ -1,7 +1,7 @@
 #include <allegro.h>
 #include <iostream>
 
-#include "ArbolesAVV.h"
+#include "AVL.h"
 
 void init();
 void deinit();
@@ -332,28 +332,29 @@ char* retornarChar(int numero)
 	
 }
 
-void graficarArbolAllegro(arbol *recorrer, int xinterno, int yinterno, int incremento, int xanterior, int yanterior){
+void graficarArbolAllegro(Nodo *recorrer, int xinterno, int yinterno, int incremento, int xanterior, int yanterior){
 
 	if(recorrer==NULL)
         return;
 
-    graficarArbolAllegro(recorrer->dere, xinterno + incremento, yinterno+80, incremento-38,xinterno,yinterno);
-    graficarArbolAllegro(recorrer->izq, xinterno - incremento, yinterno+80, incremento-38,xinterno,yinterno);
+    graficarArbolAllegro(recorrer->derecho, xinterno + incremento, yinterno+80, incremento-38,xinterno,yinterno);
+    graficarArbolAllegro(recorrer->izquierdo, xinterno - incremento, yinterno+80, incremento-38,xinterno,yinterno);
 	
     //char *numerografico = new char[5]; int numero = recorrer->dato;
 	//Trae Numero 
+
 	char *numerografico;
 	numerografico = retornarChar(recorrer->dato);
 
 	//Pinta Numero y Aristas
 	imprimirimagen(numerografico,xinterno,yinterno);
-	if (recorrer != NULL && recorrer!=raiz)
-	{
+	//if (recorrer != NULL && recorrer!= raiz )
+	//{
 		line(screen, xinterno+40, yinterno, xanterior+40, yanterior+50, 32); /// Linea izquierda a Derecha  Backslahs
- 		line(screen, xinterno+40, yinterno, xanterior+40, yanterior+50, 32); /// Linez de Derecha a Izquier Slash
+ 		line(screen, xinterno+40, yinterno, xanterior+40, yanterior+50, 32); /// Linez de Derecha a Izquier Slash 
 		/* line(screen, xinterno+40, yinterno, xinterno+80, yinterno+150, 32);
 		line(screen, xinterno+40, yinterno+50, xinterno, yinterno+150, 32); */
-	}
+	//}
 
 }
 
@@ -385,6 +386,7 @@ int main() {
 	clearScreen();
 	//MENSAJE.crea("L",FONT,5,5,230,60);	
 	
+	AVL ArbolInt;
 	
 	while(!key[KEY_ESC]){
       
@@ -399,15 +401,18 @@ int main() {
 		int n = retornarEntero();
 		//Aqui agrega el nuevo nodo al arbol
       	if(ban==1){
-	    	arbolVacio(recorrer, n);
+	    	//arbolVacio(recorrer, n);
 			ban=0;
 		}else{
-			agregarDatos(n);
+			ArbolInt.Insertar(n);
+			//agregarDatos(n);
 		}	
-		recorrer=raiz;
-		int capas = altura(recorrer);
-		graficarArbolAllegro(recorrer,500,25,50*capas,500,25);
-			
+		int capas = ArbolInt.AlturaArbol();
+		//textprintf(screen,font,100,100,150,"%d",capas++);
+		//nodo=raiz;
+		/*int capas = altura(recorrer); */
+		ArbolInt.Raiz();
+		graficarArbolAllegro(actual,500,25,50*(capas+1),500,25);	
 	}
 	readkey();
 	deinit();

@@ -116,6 +116,7 @@ void insertarNuevo(arbol *recorrer, arbol *nuevo, arbol *PadreAB){
 				nuevo->padre=PadreAB;
 				return;
 			}
+		//Ver si es Mayor que el nuevo nodo
 		}else if (nuevo->dato > recorrer->dato){
 			if (recorrer->dere!=NULL){
 				PadreAB=recorrer->dere;
@@ -250,14 +251,14 @@ int buscarDato(arbol *recorrer, int buscado){
 
 //Funci�n que devuelve 0 si el dato existe en un arbol y 1 si no existe.
 //Esta funci�n es utilizada por la funci�n Insertar para validar que el nodo que se ingresa no existe en el �rbol, si no existe deja insertar.
-int exiteenArbol(arbol *recorrer, int buscado){
+int exiteenArbol(arbol *recorrer, int buscado){ 
 	if (recorrer==NULL){
 		return 1;
 	}else{
 		if(buscado<recorrer->dato){
-			exiteenArbol(recorrer->izq, buscado);
+			exiteenArbol(recorrer->izq, buscado); // Buscamos todos los nodos hacia la izquierda de forma recursiva
 		}else if (buscado>recorrer->dato){
-			exiteenArbol(recorrer->dere, buscado); 
+			exiteenArbol(recorrer->dere, buscado); // Buscamos todos los nodos hacia la derecha de forma recursiva
 			
 		}else{
 			return 0;
@@ -725,7 +726,7 @@ void agregarDatos(int numero){
 		if (nuevo->dato!=0){
 			if (exiteenArbol(recorrer, nuevo->dato)==1){ //Evalua si el nodo ya existe en el arbol.
 				PadreAB=raiz;
-				insertarNuevo(recorrer, nuevo, PadreAB);
+				insertarNuevo(recorrer, nuevo, PadreAB); // aux, nueva nodo, Raiz
 				//Agrega Raiz en caso de que no exista !
 				//Automaticamente hace el ordenamiento
 
@@ -733,7 +734,7 @@ void agregarDatos(int numero){
 				//BBnecesidadEquilibrar(recorrer);
 			}else{
 				cout<<"El numero ya existe en el arbol"<<endl;
-				getch();
+				//getch();
 			}
 		}else{
 			vaciarArbol(raiz);
