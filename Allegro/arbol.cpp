@@ -405,22 +405,23 @@ int main() {
 	    	//arbolVacio(recorrer, n);
 			ban=0;
 		}else{
-			ArbolInt.Insertar(n);
+			if(n == 0) ArbolInt.vaciarArbol(ArbolInt.raiz);
+			else ArbolInt.Insertar(n);
 			//agregarDatos(n);
+		}
+		if(ArbolInt.raiz != NULL)
+		{
+			int capas = ArbolInt.AlturaArbol();
+			graficarArbolAllegro(ArbolInt.raiz,500,25,50*(capas+1),500,25);
 		}	
-		int capas = ArbolInt.AlturaArbol();
+
 		//textprintf(screen,font,100,100,150,"%d",capas++);
 		//nodo=raiz;
 		/*int capas = altura(recorrer); */
 		//ArbolInt.Raiz();
-		if(ArbolInt.raiz == NULL)
-		{
-			clearScreen();
-		}
-		else
-		{
-			graficarArbolAllegro(ArbolInt.raiz,500,25,50*(capas+1),500,25);	
-		}
+
+			
+		
 		
 	}
 	readkey();
